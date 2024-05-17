@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +14,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ImageProvider = Provider.of<ImagesProvider>(context);
+    final imageProvider = Provider.of<ImagesProvider>(context);
     return Scaffold(
       appBar: const CustomAppBar(
         title: 'MainScreen',
@@ -43,28 +43,38 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Consumer<ImagesProvider>(
         builder: (context, imagesProvider, _) {
-          if (imagesProvider.isLoading) {
+          if (imagesProvider.isLoading && imagesProvider.photos.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           } else if (imagesProvider.photos.isEmpty) {
-            return const Text('No images available');
+            return const Center(child: Text('No images available'));
           } else {
             return ListView.builder(
               controller: _scrollController,
-              itemCount: imagesProvider.photos.length,
+              itemCount: imagesProvider.photos.length + 1,
               itemBuilder: (context, index) {
-                final photo = imagesProvider.photos[index];
-                return GestureDetector(
-                  onTap: () {
-                    Get.to(DetailScreen(photo: photo));
-                  },
-                  child: ListTile(
-                    title: Image.network(
-                      photo.imageUrl,
-                      width: 400,
-                      height: 400,
+                if (index < imagesProvider.photos.length) {
+                  final photo = imagesProvider.photos[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(DetailScreen(photo: photo));
+                    },
+                    child: ListTile(
+                      title: Image.network(
+                        photo.imageUrl,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        height: MediaQuery.of(context).size.height * 0.2,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                } else {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
               },
             );
           }

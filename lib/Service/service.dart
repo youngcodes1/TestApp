@@ -7,7 +7,6 @@ import '../Utils/api/api.dart';
 
 class ImageService {
   static const String _baseUrl = 'https://api.unsplash.com';
-  // static const String _apiKey = '6mvjFaLLQs0cADg55Juf-wSKa2dtgdQjrafYxMPfz_g';
 
   static Future<List<ImageModel>> fetchPhotos(
       {int page = 1, int perPage = 10}) async {
