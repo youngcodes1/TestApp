@@ -43,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       body: Consumer<ImagesProvider>(
         builder: (context, imagesProvider, _) {
-          if (imagesProvider.isLoading && imagesProvider.photos.isEmpty) {
+          if (imagesProvider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           } else if (imagesProvider.photos.isEmpty) {
             return const Center(child: Text('No images available'));
